@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-
+int messages = 0;
 
 /* Zadanie:
  * Niech kazdy client podlicza ile wiadomosci wyslal do serwera, i za kazdym razem
@@ -37,6 +37,8 @@ void *handle_client(void *socket_desc) {
 
         // Print the response from the client
         printf("Received from client: %s\n", buffer);
+        messages++;
+        printf("Messages received: %d\n", messages);
 
         // Sleep for a while before sending the next ping
         sleep(1);

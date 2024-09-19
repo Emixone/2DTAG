@@ -6,7 +6,7 @@
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
-
+int messages = 0;
 int
 main()
 {
@@ -49,7 +49,9 @@ main()
 
         // Respond with "pong"
         send(sock, "pong", strlen("pong"), 0);
+        messages++;
         printf("Sent to server: pong\n");
+        printf("Messages sent: %d\n", messages);
     }
 
     // Close the socket
