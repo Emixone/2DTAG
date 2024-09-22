@@ -38,18 +38,11 @@ main()
     while (1) {
         // Clear the buffer and wait for a message from the server
         memset(buffer, 0, BUFFER_SIZE);
-        int read_size = read(sock, buffer, BUFFER_SIZE);
-        if (read_size <= 0) {
-            printf("Server disconnected or error occurred\n");
-            break;
-        }
 
-        // Print the message from the server
-        printf("Received from server: %s\n", buffer);
-
-        // Respond with "pong"
         send(sock, "pong", strlen("pong"), 0);
         messages++;
+
+	usleep(100);
         printf("Sent to server: pong\n");
         printf("Messages sent: %d\n", messages);
     }

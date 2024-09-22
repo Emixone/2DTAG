@@ -4,16 +4,9 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-int messages = 0;
 
-/* Zadanie:
- * Niech kazdy client podlicza ile wiadomosci wyslal do serwera, i za kazdym razem
- * wyswietlal ta ilosc (czyli client.c powinno miec zmienna messages, przy kazdym sendzie
- * messages++).
- * Niech serwer podlicza ile wiadomosci otrzymal od wszystkich klientow. Czyli mamy
- * zmienna messages w server.c, za kazdym razem jak dostaniemy wiadomosc od klienta
- * messages++.
- */
+int messages = 0;
+pthread_mutex_t messages_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
@@ -23,10 +16,6 @@ void *handle_client(void *socket_desc) {
     char buffer[BUFFER_SIZE] = {0};
 
     while (1) {
-        // Send ping message to the client
-        send(sock, "ping", strlen("ping"), 0);
-        printf("Sent to client: ping\n");
-
         // Clear the buffer and wait for a response
         memset(buffer, 0, BUFFER_SIZE);
         int read_size = read(sock, buffer, BUFFER_SIZE);
@@ -37,11 +26,10 @@ void *handle_client(void *socket_desc) {
 
         // Print the response from the client
         printf("Received from client: %s\n", buffer);
+	pthread_mutex_lock(&messages_mutex);
         messages++;
+	pthread_mutex_unlock(&messages_mutex);
         printf("Messages received: %d\n", messages);
-
-        // Sleep for a while before sending the next ping
-        sleep(1);
     }
 
     // Close the socket and free the thread
@@ -55,6 +43,8 @@ int main() {
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
+
+    // pthread_mutex_init(&messages_mutex);
 
     // Create socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
