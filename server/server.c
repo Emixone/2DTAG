@@ -11,6 +11,22 @@ pthread_mutex_t messages_mutex = PTHREAD_MUTEX_INITIALIZER;
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+/* Zadanie 2
+ * Client wyswietla czerwony kwadrat na ekranie.
+ * Tworzymy okno za pomoca rayliba i rysujemy kwadrat.
+ *
+ * Zadanie 3
+ * Movement system:
+ * Jakies przyciski przesuwaja kwadrat w jakis tam sposob
+ * Na razie only client side
+ *
+ * Zadanie 4
+ * Zamiast obslugiwac movement po stronie klienta, przenies state (pozycja itd.)
+ * na serwer. Klient powinien wysylac wiadomosc do serwera ze chce poruszyc
+ * kwadratem a server powinien to zarejestrowac, zmodyfikowac state i wyslac
+ * aktualizacje stanu do clienta.
+ */
+
 void *handle_client(void *socket_desc) {
     int sock = *(int *)socket_desc;
     char buffer[BUFFER_SIZE] = {0};
