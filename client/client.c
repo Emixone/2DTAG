@@ -3,13 +3,37 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <raylib.h>
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
+int positionX;
+int positionY;
 int messages = 0;
 int
 main()
 {
+    InitWindow(800,400, "2DTAG");
+    while(!WindowShouldClose())
+    {
+        if(IsKeyDown(KEY_D))
+        {
+           positionX++;
+        }
+        if(IsKeyDown(KEY_A))
+        {
+           positionX--;
+        }
+        if(IsKeyDown(KEY_W))
+        {
+           positionY++;
+        }
+        if(IsKeyDown(KEY_S))
+        {
+           positionY--;
+        }
+        DrawRectangle(positionX, positionY, 50, 50, RED);
+    }
     int sock = 0;
     struct sockaddr_in serv_addr;
     char buffer[BUFFER_SIZE] = {0};
