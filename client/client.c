@@ -16,6 +16,8 @@ main()
     InitWindow(800,400, "2DTAG");
     while(!WindowShouldClose())
     {
+        BeginDrawing();
+        ClearBackground(WHITE);
         if(IsKeyDown(KEY_D))
         {
            positionX++;
@@ -26,13 +28,14 @@ main()
         }
         if(IsKeyDown(KEY_W))
         {
-           positionY++;
+           positionY--;
         }
         if(IsKeyDown(KEY_S))
         {
-           positionY--;
+           positionY++;
         }
         DrawRectangle(positionX, positionY, 50, 50, RED);
+        EndDrawing();
     }
     int sock = 0;
     struct sockaddr_in serv_addr;
