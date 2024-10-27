@@ -7,9 +7,49 @@
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
+float speedRight = 0;
+float speedLeft = 0;
+float speedUp = 0;
+float speedDown = 0;
 int positionX;
 int positionY;
 int messages = 0;
+    void moveRight()
+    {
+        speedRight += 0.01;
+        if (speedRight > 0.5f)
+        {
+            speedRight = 0.5f;
+        }
+        positionX += speedRight;
+    }
+    void moveLeft()
+    {
+        speedLeft += 0.01;
+        if (speedLeft > 0.5f)
+        {
+            speedLeft = 0.5f;
+        }
+        positionX -= speedLeft;
+    }
+    void moveUp()
+    {
+        speedUp += 0.01;
+        if (speedUp > 0.5f)
+        {
+            speedUp = 0.5f;
+        }
+        positionY -= speedUp;
+    }
+    void moveDown()
+    {
+        speedDown += 0.01;
+        if (speedDown > 0.5f)
+        {
+            speedDown = 0.5f;
+        }
+        positionY += speedDown;
+    }
 int
 main()
 {
@@ -20,19 +60,35 @@ main()
         ClearBackground(WHITE);
         if(IsKeyDown(KEY_D))
         {
-           positionX++;
+           moveRight();
+        }
+        else
+        {
+            speedRight = 0;
         }
         if(IsKeyDown(KEY_A))
         {
-           positionX--;
+           moveLeft();
+        }
+        else
+        {
+            speedLeft = 0;
         }
         if(IsKeyDown(KEY_W))
         {
-           positionY--;
+           moveUp();
+        }
+        else
+        {
+           speedUp = 0;
         }
         if(IsKeyDown(KEY_S))
         {
-           positionY++;
+           moveDown();
+        }
+        else
+        {
+            speedDown = 0;
         }
         DrawRectangle(positionX, positionY, 50, 50, RED);
         EndDrawing();
