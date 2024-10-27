@@ -4,51 +4,51 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <raylib.h>
-
+#define MAX_SPEED 0.5f
+#define SPEED_INCREMENT 0.01f
 #define PORT 8080
 #define BUFFER_SIZE 1024
-float speedRight = 0;
-float speedLeft = 0;
-float speedUp = 0;
-float speedDown = 0;
-int positionX;
-int positionY;
+float speedX = 0;
+float speedY = 0;
+float positionX = 0;
+float positionY = 0;
 int messages = 0;
+bool isMoving;
     void moveRight()
     {
-        speedRight += 0.01;
-        if (speedRight > 0.5f)
+        speedX += SPEED_INCREMENT;
+        if (speedX > MAX_SPEED)
         {
-            speedRight = 0.5f;
+            speedX = MAX_SPEED;
         }
-        positionX += speedRight;
+        positionX += speedX;
     }
     void moveLeft()
     {
-        speedLeft += 0.01;
-        if (speedLeft > 0.5f)
+        speedX -= SPEED_INCREMENT;
+        if (speedX > MAX_SPEED)
         {
-            speedLeft = 0.5f;
+            speedX = MAX_SPEED;
         }
-        positionX -= speedLeft;
+        positionX += speedX;
     }
     void moveUp()
     {
-        speedUp += 0.01;
-        if (speedUp > 0.5f)
+        speedY -= SPEED_INCREMENT;
+        if (speedY > MAX_SPEED)
         {
-            speedUp = 0.5f;
+            speedY = MAX_SPEED;
         }
-        positionY -= speedUp;
+        positionY += speedY;
     }
     void moveDown()
     {
-        speedDown += 0.01;
-        if (speedDown > 0.5f)
+        speedY += SPEED_INCREMENT;
+        if (speedY > MAX_SPEED)
         {
-            speedDown = 0.5f;
+            speedY = MAX_SPEED;
         }
-        positionY += speedDown;
+        positionY += speedY;
     }
 int
 main()
@@ -61,36 +61,34 @@ main()
         if(IsKeyDown(KEY_D))
         {
            moveRight();
+           isMoving = true;
+        }
+        else if(IsKeyDown(KEY_A))
+        {
+            moveLeft();
         }
         else
         {
-            speedRight = 0;
-        }
-        if(IsKeyDown(KEY_A))
-        {
-           moveLeft();
-        }
-        else
-        {
-            speedLeft = 0;
+            speedX = 0;
         }
         if(IsKeyDown(KEY_W))
         {
            moveUp();
         }
-        else
-        {
-           speedUp = 0;
-        }
-        if(IsKeyDown(KEY_S))
+        else if(IsKeyDown(KEY_S))
         {
            moveDown();
         }
         else
         {
-            speedDown = 0;
+            speedY = 0;
         }
+        /*1. Poprawic bug z predkoscia rosnaca w nieskonczonosc dla ujemnych SpeedX i SpeedY
+        2. Poczytac co to jest rownanie pitagorsa
+        3. Poczytac co toj est matematyczny wektor
+        2a. Dlaczego jak wcisniemy D+S ruszamy sie szybciej? (ma zwiazek z rownaniem pitagorasa) */
         DrawRectangle(positionX, positionY, 50, 50, RED);
+        printf("%f  %f\n",speedX,speedY);
         EndDrawing();
     }
     int sock = 0;
