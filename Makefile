@@ -1,17 +1,13 @@
-LINKFLAGS += -lraylib -lm
-CLIENT = client.c
-SERVER = server.c
+LDFLAGS += -lraylib -lm
+CLIENT = client/client.c
+SERVER = server/server.c
 
-client:
-	cd client
-	clang -o client $(CLIENT) $(LINKFLAGS)
-	cd ..
-server:
-	cd server
-	clang -o server $(SERVER)
-	cd ..
-all:
-	cd client
-	clang -o client $(CLIENT) $(LINKFLAGS)
-	cd ../server
-	clang -o server $(SERVER)		
+all: 2dtag-client 2dtag-server
+
+2dtag-client: $(CLIENT)
+	clang -o $@ $(CLIENT) $(LDFLAGS)
+
+2dtag-server: $(SERVER)
+	clang -o $@ $(SERVER)
+
+.PHONY: all
