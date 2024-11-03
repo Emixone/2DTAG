@@ -17,7 +17,7 @@ bool isMoving;
     void moveRight()
     {
         speedX += SPEED_INCREMENT;
-        if (speedX > MAX_SPEED)
+        if (speedX > MAX_SPEED | speedX < -MAX_SPEED)
         {
             speedX = MAX_SPEED;
         }
@@ -26,7 +26,7 @@ bool isMoving;
     void moveLeft()
     {
         speedX -= SPEED_INCREMENT;
-        if (speedX > MAX_SPEED)
+        if (speedX > MAX_SPEED | speedX < -MAX_SPEED)
         {
             speedX = MAX_SPEED;
         }
@@ -35,7 +35,7 @@ bool isMoving;
     void moveUp()
     {
         speedY -= SPEED_INCREMENT;
-        if (speedY > MAX_SPEED)
+        if (speedY > MAX_SPEED | speedY < -MAX_SPEED)
         {
             speedY = MAX_SPEED;
         }
@@ -44,7 +44,7 @@ bool isMoving;
     void moveDown()
     {
         speedY += SPEED_INCREMENT;
-        if (speedY > MAX_SPEED)
+        if (speedY > MAX_SPEED | speedY < -MAX_SPEED)
         {
             speedY = MAX_SPEED;
         }
