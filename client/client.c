@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <raylib.h>
@@ -8,48 +9,34 @@
 #define SPEED_INCREMENT 0.01f
 #define PORT 8080
 #define BUFFER_SIZE 1024
+typedef struct
+{
+    int x;
+    int y;
+}Direction;
+Direction direction;
 float speedX = 0;
 float speedY = 0;
 float positionX = 0;
 float positionY = 0;
 int messages = 0;
 bool isMoving;
-    void moveRight()
+float clamp(float value, float min, float max)
+{
+    if (value < min)
     {
-        speedX += SPEED_INCREMENT;
-        if (speedX > MAX_SPEED | speedX < -MAX_SPEED)
-        {
-            speedX = MAX_SPEED;
-        }
-        positionX += speedX;
+        return min;
     }
-    void moveLeft()
+    else if (value > max)
     {
-        speedX -= SPEED_INCREMENT;
-        if (speedX > MAX_SPEED | speedX < -MAX_SPEED)
-        {
-            speedX = MAX_SPEED;
-        }
-        positionX += speedX;
+        return max;
     }
-    void moveUp()
+    else
     {
-        speedY -= SPEED_INCREMENT;
-        if (speedY > MAX_SPEED | speedY < -MAX_SPEED)
-        {
-            speedY = MAX_SPEED;
-        }
-        positionY += speedY;
+        return value;
     }
-    void moveDown()
-    {
-        speedY += SPEED_INCREMENT;
-        if (speedY > MAX_SPEED | speedY < -MAX_SPEED)
-        {
-            speedY = MAX_SPEED;
-        }
-        positionY += speedY;
-    }
+
+}
 int
 main()
 {
@@ -58,31 +45,36 @@ main()
     {
         BeginDrawing();
         ClearBackground(WHITE);
-        if(IsKeyDown(KEY_D))
-        {
-           moveRight();
-           isMoving = true;
-        }
-        else if(IsKeyDown(KEY_A))
-        {
-            moveLeft();
-        }
-        else
+        // A - obliczenie kierunku
+        direction.x = 0;
+        direction.y = 0;
+        direction.x += IsKeyDown(KEY_D);
+        direction.x -= IsKeyDown(KEY_A);
+        direction.y += IsKeyDown(KEY_S);
+        direction.y -= IsKeyDown(KEY_W);
+
+        // B - obliczenie predkosci
+        speedX = clamp(direction.x * SPEED_INCREMENT + speedX, -MAX_SPEED, MAX_SPEED);
+        speedY = clamp(direction.y * SPEED_INCREMENT + speedY, -MAX_SPEED, MAX_SPEED);
+        if(direction.x == 0)
         {
             speedX = 0;
         }
-        if(IsKeyDown(KEY_W))
-        {
-           moveUp();
-        }
-        else if(IsKeyDown(KEY_S))
-        {
-           moveDown();
-        }
-        else
+        if(direction.y == 0)
         {
             speedY = 0;
         }
+        if (direction.x != 0 && direction.y != 0)
+        {
+            speedX = sqrt((speedX * speedX) + (speedY * speedY));
+            speedY = sqrt((speedX * speedX) + (speedY * speedY));
+        }
+
+        // C - aktualizacja pozycji
+        positionX += speedX;
+        positionY += speedY;
+            
+         
         /*1. Poprawic bug z predkoscia rosnaca w nieskonczonosc dla ujemnych SpeedX i SpeedY
         2. Poczytac co to jest rownanie pitagorsa
         3. Poczytac co toj est matematyczny wektor
