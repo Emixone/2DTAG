@@ -5,38 +5,16 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <raylib.h>
-#define MAX_SPEED 0.5f
-#define SPEED_INCREMENT 0.01f
+#include "entity.h"
+
 #define PORT 8080
 #define BUFFER_SIZE 1024
-typedef struct
-{
-    int x;
-    int y;
-}Direction;
-Direction direction;
-float speedX = 0;
-float speedY = 0;
-float positionX = 0;
-float positionY = 0;
+
+Entity player;
+
 int messages = 0;
 bool isMoving;
-float clamp(float value, float min, float max)
-{
-    if (value < min)
-    {
-        return min;
-    }
-    else if (value > max)
-    {
-        return max;
-    }
-    else
-    {
-        return value;
-    }
 
-}
 int
 main()
 {
@@ -45,42 +23,23 @@ main()
     {
         BeginDrawing();
         ClearBackground(WHITE);
+
         // A - obliczenie kierunku
-        direction.x = 0;
-        direction.y = 0;
-        direction.x += IsKeyDown(KEY_D);
-        direction.x -= IsKeyDown(KEY_A);
-        direction.y += IsKeyDown(KEY_S);
-        direction.y -= IsKeyDown(KEY_W);
+        player.direction.x = 0;
+        player.direction.y = 0;
+        player.direction.x += IsKeyDown(KEY_D);
+        player.direction.x -= IsKeyDown(KEY_A);
+        player.direction.y += IsKeyDown(KEY_S);
+        player.direction.y -= IsKeyDown(KEY_W);
 
-        // B - obliczenie predkosci
-        speedX = clamp(direction.x * SPEED_INCREMENT + speedX, -MAX_SPEED, MAX_SPEED);
-        speedY = clamp(direction.y * SPEED_INCREMENT + speedY, -MAX_SPEED, MAX_SPEED);
-        if(direction.x == 0)
-        {
-            speedX = 0;
-        }
-        if(direction.y == 0)
-        {
-            speedY = 0;
-        }
-        if (direction.x != 0 && direction.y != 0)
-        {
-            speedX = sqrt((speedX * speedX) + (speedY * speedY));
-            speedY = sqrt((speedX * speedX) + (speedY * speedY));
-        }
+        Entity_move(&player);
 
-        // C - aktualizacja pozycji
-        positionX += speedX;
-        positionY += speedY;
-            
-         
         /*1. Poprawic bug z predkoscia rosnaca w nieskonczonosc dla ujemnych SpeedX i SpeedY
         2. Poczytac co to jest rownanie pitagorsa
         3. Poczytac co toj est matematyczny wektor
         2a. Dlaczego jak wcisniemy D+S ruszamy sie szybciej? (ma zwiazek z rownaniem pitagorasa) */
-        DrawRectangle(positionX, positionY, 50, 50, RED);
-        printf("%f  %f\n",speedX,speedY);
+        DrawRectangle(player.position.x, player.position.y, 50, 50, RED);
+        printf("%f  %f\n", player.speed.x, player.speed.y);
         EndDrawing();
     }
     int sock = 0;

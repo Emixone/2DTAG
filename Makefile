@@ -1,13 +1,20 @@
 LDFLAGS += -lraylib -lm
-CLIENT = client/client.c
+HEADER = client/client.h
+CLIENT = client/client.c client/entity.c
 SERVER = server/server.c
+TEST = test/main.c client/entity.c
 
-all: 2dtag-client 2dtag-server
+all: 2dtag-client 2dtag-server 2dtag-test
 
-2dtag-client: $(CLIENT)
+$(HEADER):
+
+2dtag-client: $(CLIENT) $(HEADER)
 	clang -o $@ $(CLIENT) $(LDFLAGS)
 
-2dtag-server: $(SERVER)
+2dtag-server: $(SERVER) $(HEADER)
 	clang -o $@ $(SERVER)
+
+2dtag-test: $(TEST) $(HEADER)
+	clang -o $@ $(TEST) $(LDFLAGS)
 
 .PHONY: all
