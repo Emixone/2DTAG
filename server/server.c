@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include "entity.h"
 
 int messages = 0;
 pthread_mutex_t messages_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -28,6 +29,7 @@ pthread_mutex_t messages_mutex = PTHREAD_MUTEX_INITIALIZER;
  */
 
 void *handle_client(void *socket_desc) {
+    
     int sock = *(int *)socket_desc;
     char buffer[BUFFER_SIZE] = {0};
 
@@ -35,18 +37,53 @@ void *handle_client(void *socket_desc) {
         // Clear the buffer and wait for a response
         memset(buffer, 0, BUFFER_SIZE);
         int read_size = read(sock, buffer, BUFFER_SIZE);
+        
         if (read_size <= 0) {
             printf("Client disconnected or error occurred\n");
             break;
         }
-
+printf("%d\n", *buffer);
         // Print the response from the client
-        printf("Received from client: %s\n", buffer);
-	pthread_mutex_lock(&messages_mutex);
-        messages++;
-	pthread_mutex_unlock(&messages_mutex);
-        printf("Messages received: %d\n", messages);
+        if(strcmp(buffer, "up") == 0)
+{
+	printf("0\n");
+}
+
+    if(strcmp(buffer, "up-right") == 0)
+    {
+        printf("1\n");
     }
+
+    if(strcmp(buffer, "right") == 0)
+    {
+        printf("2\n");
+    }
+
+    if(strcmp(buffer, "down-right") == 0)
+    {
+        printf("3\n");
+    }
+
+    if(strcmp(buffer, "down") == 0)
+    {
+        printf("4\n");
+    }
+
+    if(strcmp(buffer, "up-left") == 0)
+    {
+        printf("-1\n");
+    }
+
+    if(strcmp(buffer, "left") == 0)
+    {
+        printf("-2\n");
+    }
+
+    if(strcmp(buffer, "down-left") == 0)
+    {
+        printf("-3\n");
+    }
+}
 
     // Close the socket and free the thread
     close(sock);
