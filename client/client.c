@@ -11,6 +11,12 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+/*
+1. Kiedy client sie polaczy, serwer musi stworzyc strukt Player z pozycja 0, 0
+2. Kiedy serwer dostanie wiadomosc z direction, np. "left", "right" itd. aktualizuje pozycje Playera (podobnie jak to sie dzieje teraz na kliencie)
+3. Kiedy serwer zakutalizuje pozycje, musi wyslac wiadomosc NewPos x,y 
+*/
+
 Entity player;
 
 int messages = 0;

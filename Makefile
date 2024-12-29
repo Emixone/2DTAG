@@ -1,6 +1,6 @@
 LDFLAGS += -lraylib -lm
 HEADER = client/client.h
-CLIENT = client/client.c client/entity.c
+CLIENT = client/client.c client/entity.c server/entity.c server/entity.h
 SERVER = server/server.c
 TEST = test/main.c client/entity.c
 

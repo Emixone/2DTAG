@@ -12,6 +12,12 @@ pthread_mutex_t messages_mutex = PTHREAD_MUTEX_INITIALIZER;
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+struct Player 
+    {
+        float x;
+        float y;
+    };
+
 /* Zadanie 2
  * Client wyswietla czerwony kwadrat na ekranie.
  * Tworzymy okno za pomoca rayliba i rysujemy kwadrat.
@@ -30,6 +36,7 @@ pthread_mutex_t messages_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *handle_client(void *socket_desc) {
     
+    struct Player plr;
     int sock = *(int *)socket_desc;
     char buffer[BUFFER_SIZE] = {0};
 
@@ -47,42 +54,56 @@ printf("%d\n", *buffer);
         if(strcmp(buffer, "up") == 0)
 {
 	printf("0\n");
+    plr.y-=0.01;
 }
 
     if(strcmp(buffer, "up-right") == 0)
     {
         printf("1\n");
+        plr.y-= 0.01;
+        plr.x+=0.01;
     }
 
     if(strcmp(buffer, "right") == 0)
     {
         printf("2\n");
+        plr.x+= 0.01;
     }
 
     if(strcmp(buffer, "down-right") == 0)
     {
         printf("3\n");
+        plr.y+=0.01;
+        plr.x+=0.01;
     }
 
     if(strcmp(buffer, "down") == 0)
     {
         printf("4\n");
+        plr.y+= 0.01;
     }
 
     if(strcmp(buffer, "up-left") == 0)
     {
         printf("-1\n");
+        plr.y-= 0.01;
+        plr.x-= 0.01;
     }
 
     if(strcmp(buffer, "left") == 0)
     {
         printf("-2\n");
+        plr.x-= 0.01;
     }
 
     if(strcmp(buffer, "down-left") == 0)
     {
         printf("-3\n");
+        plr.y+= 0.01;
+        plr.x-= 0.01;
     }
+    char newpos[20] = {"NewPos%f,%f",plr.x,plr.y};
+    send(sock, newpos, strlen(newpos), 0);
 }
 
     // Close the socket and free the thread
